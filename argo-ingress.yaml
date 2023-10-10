@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: argo-ingress
+  namespace: argocd
+  annotations:
+    kubernetes.io/ingress.className: nginx
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+spec:
+  rules:
+  - host: argocd.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            # Reference to a Service name, also specified in the Rollout spec.strategy.canary.stableService field
+            name: argocd-server
+            port:
+              number: 443
